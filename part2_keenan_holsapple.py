@@ -29,14 +29,14 @@ early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=
 model = Sequential()
 
 # input convolutional layer 1 (1)
-model.add(Conv2D(64, (3,3), input_shape=(28, 28, 1)))
+model.add(Conv2D(4, (2,2), input_shape=(28, 28, 1)))
 model.add(Activation("relu"))
 
 # pooling layer 1 (2)
 model.add(MaxPooling2D(pool_size=(2,2)))
 
 # convolutional layer 2 (3)
-model.add(Conv2D(64, (3,3)))
+model.add(Conv2D(4, (2,2)))
 model.add(Activation("relu"))
 
 # pooling layer 2 (4)
@@ -47,6 +47,9 @@ model.add(Flatten())
 
 # dense layer 1 (6)
 model.add(Dense(64, activation="relu"))
+
+
+model.add(Dense(128, activation="relu"))
 
 # dense layer 2 (7)
 model.add(Dense(10, 
@@ -63,13 +66,16 @@ train = model.fit(X_train.reshape(-1, 28, 28, 1), y_train,
                   validation_data=(X_test.reshape(-1, 28, 28, 1),y_test), 
 
                   # number of epochs
-                  epochs=3, 
+                  epochs=20, 
 
                   # stops overlearning in case
                   callbacks=[early_stop])
 
 # finding loss and accuracy depending on inputs
 loss, accuracy = model.evaluate(X_test.reshape(-1, 28, 28, 1), y_test)
+
+model.save('mnist_cnn.h5')
+
 
 # plot specifications
 fig, ax = plt.subplots(figsize=(12,10))
